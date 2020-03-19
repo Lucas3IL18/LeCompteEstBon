@@ -1,5 +1,5 @@
 package application;
 
-public class Modele {
+public class Modele { 
 
 }

@@ -15,8 +15,8 @@ public class GereScores {
 	
 	private TreeSet<Score> list;
 	private final String path = System.getProperty("user.dir")+"//data//";
-	private final String serialName = "serial.bin";
-	private final String htmlName = "resultat.html";
+	private static final String SERIALNAME = "serial.bin"; 
+	private static final String HTMLNAME = "resultat.html";
 	
 	public GereScores () {
 		this.list = new TreeSet<>();
@@ -30,6 +30,13 @@ public class GereScores {
 		}
 	}
 	
+	private void addScore (Score s) {
+		this.list.add(s);
+		if (this.list.size()==10) {
+			this.list.pollLast();
+		}
+	}
+	
 	public void affiche () {
 		for (Score e : this.list) {
 			System.out.println(e);
@@ -37,18 +44,20 @@ public class GereScores {
 	}
 	
 	public String toString() {
-		String res = "";
+		StringBuilder res = new StringBuilder();
 		for (Score e:this.list ) {
-			res += e.toString()+"\n";
+			res.append(e.toString()+"\n");
 		}
-		return res;
+		return res.toString();
 	}
 	
+	/**
+	 * Sauvegarde du tableau des scores dans un fichier .bin
+	 */
 	public void enregistre () {
-		File file = new File (path+serialName);
+		File file = new File (path+SERIALNAME);
 	    ObjectOutputStream oos = null;
-	    try {
-	    	final FileOutputStream fichier = new FileOutputStream(file);
+	    try (final FileOutputStream fichier = new FileOutputStream(file)) {
 	    	oos = new ObjectOutputStream(fichier);
 	    	for (Score score:this.list ) {
 	    		oos.writeObject(score);
@@ -68,27 +77,18 @@ public class GereScores {
 	    }
 	}
 	
+	/**
+	 * Extraction du tableau des scores depuis un fichier .bin
+	 */
 	public boolean charge () {
 		ObjectInputStream ois = null;
-		File file = new File (path+serialName);
+		File file = new File (path+SERIALNAME);
 		if (file.exists()) {
-			try {
-			      final FileInputStream fichier = new FileInputStream(file);
+			try (final FileInputStream fichier = new FileInputStream(file)) {
 			      ois = new ObjectInputStream(fichier);
-			      boolean end = false;
-			      while (!end) {
-			    	  try {
-			    		  Score score = (Score) ois.readObject();
-			    		  if (score!=null)
-					    	  this.addScore(score.getPseudo(), score.getValeur(), score.getTemps());
-			    	  } catch (EOFException e) {
-			    		  end=true;
-			    	  }
-			      }
-			} catch (final java.io.IOException e) {
+			      majSerialScores(ois);
+			} catch (java.io.IOException | ClassNotFoundException e) {
 				e.printStackTrace();
-			} catch (final ClassNotFoundException e) {
-			    e.printStackTrace();
 			} finally {
 				try {
 					if (ois != null) {
@@ -104,10 +104,32 @@ public class GereScores {
 		}
 	}
 	
+	/**
+	 * Procedure permettant de mettre a jour le tableau des scores
+	 * @param oi : Objet pointant vers le fichier de serialisation .bin
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	private void majSerialScores (ObjectInputStream oi) throws ClassNotFoundException, IOException {
+		boolean end = false;
+	      while (!end) {
+	    	  try {
+	    		  Score score = (Score) oi.readObject();
+	    		  if (score!=null)
+			    	  this.addScore(score);
+	    	  } catch (EOFException e) {
+	    		  end=true;
+	    	  }
+	      }
+	}
+	
+	/**
+	 * Exporte le tableau des scores dans un fichier html
+	 */
 	public void export () {
 		try {
-			File HTMLFILE= new File(path+htmlName);
-			BufferedWriter fichier = new BufferedWriter(new FileWriter(HTMLFILE));
+			File htmlFile= new File(path+HTMLNAME);
+			BufferedWriter fichier = new BufferedWriter(new FileWriter(htmlFile));
 
 			fichier.write("<HTML>\r\n" + 
 					"			<head>\r\n" + 

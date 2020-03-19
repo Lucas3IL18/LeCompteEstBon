@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.fxml.FXMLLoader;
 
 
-public class Main extends Application {
+public class Main extends Application { 
 	@Override
 	public void start(Stage primaryStage) {
 		try {

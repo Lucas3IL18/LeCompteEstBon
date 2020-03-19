@@ -20,12 +20,13 @@ public class GereScores {
 	
 	public GereScores () {
 		this.list = new TreeSet<>();
-		this.charge();
+		if (!this.charge())
+			enregistre();
 	}
 	
 	public void addScore (String pseudo, int valeur, int temps) {
 		this.list.add(new Score(pseudo, valeur, temps));
-		if (this.list.size()==10) {
+		if (this.list.size()==10) { 
 			this.list.pollLast();
 		}
 	}
@@ -72,7 +73,7 @@ public class GereScores {
 	    			oos.close();
 	    		}
 	    	} catch (final IOException ex) {
-	    	  ex.printStackTrace();
+	    	  ex.printStackTrace(); 
 	    	}
 	    }
 	}
@@ -152,34 +153,5 @@ public class GereScores {
 		}catch (Exception e) {
 			System.err.println(e);
 		}
-	}
-	
-	public static void main (String[]args) {
-		GereScores g = new GereScores();
-		g.addScore("MARCEL", 0, 67);
-		g.addScore("GEORGES", 0, 67);
-		g.addScore("RENEE", 0, 155);
-		g.addScore("GEORGES", 2, 84);
-		g.addScore("LUCIEN", 15, 220);
-		g.addScore("ANTHO", 10, 150);
-		g.addScore("MARCEL", 5, 67);
-		g.addScore("MARCEL", 4, 80);
-		g.addScore("LUCAS", 3, 67);
-		g.addScore("MARCEL", 2, 90);
-		g.addScore("MARCEL", 1, 67);
-		g.addScore("MARCEL", 50, 450);
-		g.addScore("MARCEL", 30, 67);
-		g.addScore("MARCEL", 20, 100);
-		
-		g.affiche();
-	
-		g.enregistre();
-		g = null;
-		g = new GereScores();
-		g.charge();
-		
-		System.out.println("-----------------");
-		g.affiche();
-		g.export();
 	}
 }

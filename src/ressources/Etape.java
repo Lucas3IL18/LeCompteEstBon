@@ -20,10 +20,14 @@ public class Etape {
 			throw new IllegalArgumentException();
 		} 
 		this.plaques=plaques;
+		this.indice1=-1;
+		this.indice2=-1;
 	}
 	
 	public Etape () {
 		this.plaques=generateTabInt();
+		this.indice1=-1;
+		this.indice2=-1;
 	}
 	
 	private int[] generateTabInt () {
@@ -39,6 +43,18 @@ public class Etape {
 			nombresATirer.remove(index);
 		}
 		return res;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public int getIndice1() {
+		return indice1;
+	}
+
+	public int getIndice2() {
+		return indice2;
 	}
 
 	public void setIndiceBorn1(int indice1) {
@@ -85,17 +101,26 @@ public class Etape {
 	
 	public boolean isValid () {
 		boolean res = false;
-		if (this.resultat()>=0) {
+		if (this.indice1>-1 && this.indice2>-1 && this.operation!=null && this.resultat()>=0) {
 			res = true;
 		}
 		return res;
 	}
 	
 	public String getCalcul () {
-		if (isValid())
-			return plaques[indice1]+operation+plaques[indice2]+"="+this.resultat();
-		else
-			return plaques[indice1]+operation+plaques[indice2]+"="+this.resultat()+"?";
+		if (this.indice1==-1) {
+			return "";
+		} else {
+			if (this.operation==null) {
+				return String.valueOf(plaques[indice1]);
+			} else {
+				if (this.indice2==-1) {
+					return plaques[indice1]+operation;
+				} else {
+					return plaques[indice1]+operation+plaques[indice2]+"="+this.resultat();
+				}
+			}
+		}
 	}
 	
 }

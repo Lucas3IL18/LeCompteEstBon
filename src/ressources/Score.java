@@ -36,8 +36,11 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 	 * @return temps en MM:SS
 	 */
 	public String getTempsMS () {
-		int minutes = this.temps/60;
-		int secondes = this.temps%60;
+		return Score.convertTempsMS(this.temps);
+	}
+	public static String convertTempsMS (int tmp) {
+		int minutes = tmp/60;
+		int secondes = tmp%60;
 		return minutes+":"+secondes;
 	}
 
@@ -61,7 +64,7 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 	 * Fonction retournant la date d aujourd hui
 	 * @return chaine de caractere (dd-MM-yyy)
 	 */
-	private String today () {
+	public static String today () {
 		final Date dateTmp = new Date();
 	    return new SimpleDateFormat("dd-MM-yyyy").format(dateTmp);
 	}

@@ -32,13 +32,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="17.0" prefWidth="63.0" text="00:00:00" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
-            <Button fx:id="btnJouer" mnemonicParsing="false" text="Jouer" GridPane.columnIndex="2" />
+            <Label fx:id="realTime" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="17.0" prefWidth="63.0" text="00:00:00" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
+            <Button fx:id="btnJouer" mnemonicParsing="false" onAction="#actionJouer" text="Jouer" GridPane.columnIndex="2" />
             <Button fx:id="btnScores" mnemonicParsing="false" onAction="#actionAfficherScores" text="Scores" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
             <FlowPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
                   <Label text="Pseudo : " />
-                  <TextField editable="false" />
+                  <TextField fx:id="pseudo" />
                </children>
             </FlowPane>
          </children>
@@ -67,10 +67,10 @@
                <children>
                   <ButtonBar buttonMinWidth="50.0" prefHeight="25.0" prefWidth="552.0">
                     <buttons>
-                        <Button fx:id="btnPlus" mnemonicParsing="false" text="+" />
-                      <Button fx:id="btnMoins" mnemonicParsing="false" text="-" />
-                        <Button fx:id="btnFois" mnemonicParsing="false" text="X" />
-                        <Button fx:id="btnDiviser" mnemonicParsing="false" text="/" />
+                        <Button fx:id="btnPlus" mnemonicParsing="false" onAction="#actionSelection" text="+" />
+                      <Button fx:id="btnMoins" mnemonicParsing="false" onAction="#actionSelection" text="-" />
+                        <Button fx:id="btnFois" mnemonicParsing="false" onAction="#actionSelection" text="X" />
+                        <Button fx:id="btnDiviser" mnemonicParsing="false" onAction="#actionSelection" text="/" />
                     </buttons>
                      <GridPane.margin>
                         <Insets />
@@ -81,18 +81,20 @@
                   </ButtonBar>
                   <ButtonBar buttonMinWidth="50.0" prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <buttons>
-                        <Button mnemonicParsing="false" text="8" />
-                        <Button mnemonicParsing="false" text="100" />
-                        <Button mnemonicParsing="false" text="2" />
-                        <Button mnemonicParsing="false" text="102" />
+                        <Button fx:id="plaque1" mnemonicParsing="false" onAction="#actionSelection" text="8" />
+                        <Button fx:id="plaque2" mnemonicParsing="false" onAction="#actionSelection" text="100" />
+                        <Button fx:id="plaque3" mnemonicParsing="false" onAction="#actionSelection" text="2" />
+                        <Button fx:id="plaque4" mnemonicParsing="false" onAction="#actionSelection" text="102" />
+                        <Button fx:id="plaque5" mnemonicParsing="false" onAction="#actionSelection" text="87" />
+                        <Button fx:id="plaque6" mnemonicParsing="false" onAction="#actionSelection" text="23" />
                      </buttons>
                      <padding>
-                        <Insets right="150.0" />
+                        <Insets right="90.0" />
                      </padding>
                   </ButtonBar>
                   <FlowPane prefHeight="35.0" prefWidth="512.0" GridPane.rowIndex="2">
                      <children>
-                        <TextField disable="true" />
+                        <TextField fx:id="calcul" disable="true" />
                         <Button fx:id="btnAnnuler" mnemonicParsing="false" text="Annuler">
                            <FlowPane.margin>
                               <Insets left="10.0" right="10.0" />
@@ -122,7 +124,7 @@
                             <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" />
+                              <TextArea fx:id="ligneCalculs" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" />
                               <Button fx:id="btnSupprimer" mnemonicParsing="false" text="Supprimer" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                            </children>
                         </GridPane>
@@ -137,7 +139,7 @@
                            <children>
                               <VBox prefHeight="200.0" prefWidth="100.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <children>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="263.0" text="264" textAlignment="CENTER">
+                                    <Label fx:id="nombre" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="263.0" text="264" textAlignment="CENTER">
                                        <font>
                                           <Font size="19.0" />
                                        </font>
@@ -158,7 +160,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
             </GridPane>
-            <Label text="03:01" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+            <Label fx:id="time" text="03:01" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                <font>
                   <Font name="System Bold" size="22.0" />
                </font>

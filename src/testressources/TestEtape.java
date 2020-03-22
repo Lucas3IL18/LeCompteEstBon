@@ -59,7 +59,7 @@ public class TestEtape {
 	public void testMultiplications() {
 		this.etape.setIndiceBorn1(0);
 		this.etape.setIndiceBorn2(1);
-		this.etape.setOperation("x");
+		this.etape.setOperation("X");
 		assertTrue(this.etape.isValid());
 	}
 	

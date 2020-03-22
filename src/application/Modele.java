@@ -12,7 +12,7 @@ public class Modele {
 	public static final int BORN_INF = 100;
 	public static final int BORN_SUP = 999;
 	
-	private LinkedList<Etape> list;
+	private LinkedList<Etape> listEtapes;
 	private GereScores gestion;
 	/** Pseudo du joueur en cours */
 	private String pseudo;
@@ -36,9 +36,19 @@ public class Modele {
 		this.pseudo = null;
 		int nb = BORN_INF + r.nextInt(BORN_SUP-BORN_INF);
 		this.desiredNumber = nb;
-		this.list = new LinkedList<>();
+		this.listEtapes = new LinkedList<>();
 		this.gestion.charge();
 		this.etapeEnCours = new Etape ();
+	}
+	
+	public void supprimerLastEtape () {
+		this.etapeEnCours = this.listEtapes.removeLast();
+	}
+	
+	public void resetCalculEnCours () {
+		this.etapeEnCours.setIndiceBorn1(-1);
+		this.etapeEnCours.setIndiceBorn2(-1);
+		this.etapeEnCours.setOperation(null);
 	}
 
 	public String getGameMode() {
@@ -53,9 +63,32 @@ public class Modele {
 		return pseudo;
 	}
 	
+	public boolean estJouable () {
+		return this.listEtapes.size() < this.listEtapes.get(0).getPlaques().length;
+	}
+	
+	public boolean validEtape () {
+		boolean res = this.listEtapes.add(this.etapeEnCours());
+		if (res) {
+			int[] oldlaques = etapeEnCours.getPlaques().clone();
+			oldlaques[this.etapeEnCours.getIndice1()] = -1;
+			oldlaques[this.etapeEnCours.getIndice2()] = -1;
+			int[] newPlaques = new int[oldlaques.length-1];
+			int i = 0;
+			for (int e:oldlaques)
+				if (e != -1) {
+					newPlaques[i]=e;
+					i++;
+				}
+			newPlaques[newPlaques.length-1]=this.etapeEnCours.getResultat();
+			this.etapeEnCours=new Etape (newPlaques);
+		}
+		return res;
+	}
+	
 	public boolean setPseudo (String name) {
 		boolean res = true;
-		if (name.length()>0 && name.length()<15)
+		if (name != null && name.length()>0 && name.length()<15)
 			this.pseudo = name;
 		else
 			res = false;
@@ -94,7 +127,7 @@ public class Modele {
 	
 	public String etapesToString () {
 		String res = "";
-		for (Etape e:this.list) {
+		for (Etape e:this.listEtapes) {
 			res += e.getCalcul()+"\n";
 		}
 		return res;

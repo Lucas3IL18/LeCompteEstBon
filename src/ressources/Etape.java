@@ -68,6 +68,10 @@ public class Etape {
 	public void setOperation(String operation) {
 		this.operation = operation;
 	}
+	
+	public int getResultat() {
+		return resultat();
+	}
 
 	/**
 	 * Calcul du resultat d une etape
@@ -75,21 +79,21 @@ public class Etape {
 	 */
 	private int resultat () {
 		int res;
-		switch(operation) {
-		case "x":
-			res = plaques[indice1]*plaques[indice2];
+		switch(this.operation) {
+		case "X":
+			res = this.plaques[indice1]*this.plaques[indice2];
 		break; 
 		case "/":
-			if (plaques[indice1]%plaques[indice2] == 0)
-				res = plaques[indice1]/plaques[indice2];
+			if (this.plaques[indice1]%this.plaques[indice2] == 0)
+				res = this.plaques[indice1]/this.plaques[indice2];
 			else
 				res = -1;
 		break;
 		case "-":
-			res = plaques[indice1]-plaques[indice2];
+			res = this.plaques[indice1]-this.plaques[indice2];
 		break;
 		default:
-			res = plaques[indice1]+plaques[indice2];
+			res = this.plaques[indice1]+this.plaques[indice2];
 		break;
 		}	
 		return res;
@@ -112,12 +116,12 @@ public class Etape {
 			return "";
 		} else {
 			if (this.operation==null) {
-				return String.valueOf(plaques[indice1]);
+				return String.valueOf(this.plaques[indice1]);
 			} else {
 				if (this.indice2==-1) {
-					return plaques[indice1]+operation;
+					return this.plaques[indice1]+this.operation;
 				} else {
-					return plaques[indice1]+operation+plaques[indice2]+"="+this.resultat();
+					return this.plaques[indice1]+this.operation+this.plaques[indice2]+"="+this.resultat();
 				}
 			}
 		}

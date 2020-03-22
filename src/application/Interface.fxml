@@ -66,10 +66,10 @@
                <children>
                   <ButtonBar buttonMinWidth="50.0" prefHeight="25.0" prefWidth="552.0">
                     <buttons>
-                        <Button fx:id="btnPlus" mnemonicParsing="false" onAction="#actionJouer" text="+" />
-                      <Button fx:id="btnMoins" mnemonicParsing="false" onAction="#actionJouer" text="-" />
-                        <Button fx:id="btnFois" mnemonicParsing="false" onAction="#actionJouer" text="X" />
-                        <Button fx:id="btnDiviser" mnemonicParsing="false" onAction="#actionJouer" text="/" />
+                        <Button fx:id="btnPlus" mnemonicParsing="false" onAction="#actionSelection" text="+" />
+                      <Button fx:id="btnMoins" mnemonicParsing="false" onAction="#actionSelection" text="-" />
+                        <Button fx:id="btnFois" mnemonicParsing="false" onAction="#actionSelection" text="X" />
+                        <Button fx:id="btnDiviser" mnemonicParsing="false" onAction="#actionSelection" text="/" />
                     </buttons>
                      <GridPane.margin>
                         <Insets />
@@ -80,12 +80,12 @@
                   </ButtonBar>
                   <ButtonBar buttonMinWidth="50.0" prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <buttons>
-                        <Button fx:id="plaque1" mnemonicParsing="false" onAction="#actionJouer" text="8" />
-                        <Button fx:id="plaque2" mnemonicParsing="false" onAction="#actionJouer" text="100" />
-                        <Button fx:id="plaque3" mnemonicParsing="false" onAction="#actionJouer" text="2" />
-                        <Button fx:id="plaque4" mnemonicParsing="false" onAction="#actionJouer" text="102" />
-                        <Button fx:id="plaque5" mnemonicParsing="false" onAction="#actionJouer" text="87" />
-                        <Button fx:id="plaque6" mnemonicParsing="false" onAction="#actionJouer" text="23" />
+                        <Button fx:id="plaque1" mnemonicParsing="false" onAction="#actionSelection" text="8" />
+                        <Button fx:id="plaque2" mnemonicParsing="false" onAction="#actionSelection" text="100" />
+                        <Button fx:id="plaque3" mnemonicParsing="false" onAction="#actionSelection" text="2" />
+                        <Button fx:id="plaque4" mnemonicParsing="false" onAction="#actionSelection" text="102" />
+                        <Button fx:id="plaque5" mnemonicParsing="false" onAction="#actionSelection" text="87" />
+                        <Button fx:id="plaque6" mnemonicParsing="false" onAction="#actionSelection" text="23" />
                      </buttons>
                      <padding>
                         <Insets right="90.0" />

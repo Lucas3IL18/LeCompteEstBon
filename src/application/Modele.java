@@ -23,21 +23,18 @@ public class Modele {
 	/** Mode de jeu */
 	private String gameMode;
 	private Random r;
+	private int time;
 	private Etape etapeEnCours;
 	
 	public Modele () {
 		r = new Random ();
 		this.gestion = new GereScores();
-		this.initialiser();
 	}
 	
 	public void initialiser () {
-		this.gameMode = "00";
-		this.pseudo = null;
 		int nb = BORN_INF + r.nextInt(BORN_SUP-BORN_INF);
 		this.desiredNumber = nb;
 		this.listEtapes = new LinkedList<>();
-		this.gestion.charge();
 		this.etapeEnCours = new Etape ();
 	}
 	
@@ -65,6 +62,16 @@ public class Modele {
 	
 	public boolean estJouable () {
 		return this.listEtapes.size() < this.listEtapes.get(0).getPlaques().length;
+	}
+	
+	public boolean chargeScores () {
+		return this.gestion.charge();
+	}
+	
+	public void addResult () {
+		int resultat = Math.abs(this.listEtapes.getLast().getResultat()-this.desiredNumber);
+		this.gestion.addScore(this.pseudo, resultat, this.time);
+		this.gestion.enregistre();
 	}
 	
 	public boolean validEtape () {

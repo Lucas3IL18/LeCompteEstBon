@@ -65,48 +65,72 @@ public class Controller {
 	
 	@FXML
 	private void initialize () {
-		this.pseudo.setEditable(true);
-		this.pseudo.setText(this.modele.getPseudo());
-		this.realTime.setText(Modele.realTimeHMS());
-		this.majEcran();
-		this.time.setText(String.valueOf(Score.convertTempsMS(Modele.TIME_PLAY)));
 		this.modele.setGameMode("00");
+		this.modele.setPseudo(null);
+		// initialise le modele
+		this.modele.initialiser();
+		
+		this.realTime.setText(Modele.realTimeHMS());
+		this.time.setText(String.valueOf(Score.convertTempsMS(Modele.TIME_PLAY)));
+		
+		// met a jour l ecran en focntion du modele
+		this.majEcran();
+		// passe e l etat attendre
 		this.attendre();
 	}
 	
-	@FXML
 	private void attendre () {
-		this.changeEtatBtn(false);
+		// mettre a jour le mode de jeu
 		this.modele.setGameMode("01");
+		
+		this.btnJouer.setText("Jouer");
+		this.btnScores.setDisable(false);
+		
+		// grise tout les boutons sauf jouer et scores
+		this.changeEtatBtn(false);
+		// activer la zone pseudo
+		this.pseudo.setEditable(true);
 	}
 	
 	@FXML
 	private void actionAfficherScores (ActionEvent evt) {
-		Alert bteDialog = new Alert(AlertType.INFORMATION);
-		bteDialog.setTitle("SCORES");
-		bteDialog.setHeaderText("Voici les meilleures scores :");
-		bteDialog.setContentText(this.modele.getScores());
-		bteDialog.showAndWait();
-	}
-	
-	@FXML
-	private void actionPreparer(ActionEvent evt) {
-		if (this.modele.getGameMode().contentEquals("01") && this.modele.setPseudo(this.pseudo.getText())) {
-			this.changeEtatBtn(true);
-			this.pseudo.setEditable(false);
-			this.modele.initialiser();
-			this.majEcran();
-			// lancer le chrono
-			this.btnJouer.setText("Reset");
-			this.btnValider.setDisable(true);
-			this.modele.setGameMode("02");
+		if (this.modele.chargeScores()) {
+			Alert bteDialog = new Alert(AlertType.INFORMATION);
+			bteDialog.setTitle("SCORES");
+			bteDialog.setHeaderText("Voici les meilleures scores :");
+			bteDialog.setContentText(this.modele.getScores());
+			bteDialog.showAndWait();
 		} else {
-			this.reset();
+			Alert bteDialog = new Alert(AlertType.ERROR);
+			bteDialog.setTitle("ERROR");
+			bteDialog.setHeaderText("Impossible de recuperer les scores.");
+			bteDialog.showAndWait();
 		}
 	}
 	
 	@FXML
-	private void actionJouer (ActionEvent evt) {
+	private void actionPreparer(ActionEvent evt) {
+		if (this.btnJouer.getText().equals("Reset")) {
+			this.attendre();
+		} else {
+			if (this.modele.getGameMode().equals("01") && this.modele.setPseudo(this.pseudo.getText())) {
+				this.modele.setGameMode("02");
+				this.changeEtatBtn(true);
+				this.pseudo.setEditable(false);
+				this.modele.initialiser();
+				this.majEcran();
+				// lancer le chrono
+				this.btnJouer.setText("Reset");
+				this.btnValider.setDisable(true);
+				this.btnScores.setDisable(true);
+			}
+		}
+	}
+	
+	/********** ACTION JOUER ***********/
+	@FXML
+	private void actionSelection (ActionEvent evt) {
+		this.modele.setGameMode("03");
 		Button btn = (Button) evt.getSource();
 		if (this.modele.etapeEnCours().getIndice1()==-1) {
 			try {
@@ -133,6 +157,7 @@ public class Controller {
 	
 	@FXML
 	private void actionAnnuler () {
+		this.modele.setGameMode("03");
 		this.modele.resetCalculEnCours();
 		etatBtnPlaques(true);
 		etatBtnOperations(true);
@@ -142,6 +167,7 @@ public class Controller {
 	
 	@FXML
 	private void actionValider() {
+		this.modele.setGameMode("03");
 		if(this.modele.validEtape()) {
 			etatBtnPlaques(true);
 			etatBtnOperations(true);
@@ -152,8 +178,24 @@ public class Controller {
 	
 	@FXML
 	private void actionSupprimer () {
+		this.modele.setGameMode("03");
 		this.modele.supprimerLastEtape();
+		this.btnValider.setDisable(false);
 		majEcran();
+	}
+	
+	@FXML
+	private void actionProposer () {
+		this.modele.setGameMode("03");
+		this.actionScore();
+	}
+	/******* FIN ACTION JOUER ********/
+	
+	private void actionScore () {
+		this.modele.setGameMode("04");
+		// stopper le chrono
+		this.modele.addResult();
+		this.attendre();
 	}
 	
 	private void majEcran () {
@@ -201,12 +243,6 @@ public class Controller {
 		this.plaque4.setDisable(!etat);
 		this.plaque5.setDisable(!etat);
 		this.plaque6.setDisable(!etat);
-	}
-	
-	private void reset () {
-		this.modele.initialiser();
-		this.initialize();
-		this.btnJouer.setText("Jouer");
 	}
 	
 	private void etatBtnOperations (boolean etat) {

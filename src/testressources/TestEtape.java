@@ -32,6 +32,13 @@ public class TestEtape {
 	}
 	
 	@Test
+	public void testSetOperationNull () {
+		this.etape.setOperation("+");
+		assertTrue(this.etape.setOperation(null));
+		
+	}
+	
+	@Test
 	public void testNombreEntierPositif() {
 		this.etape.setIndiceBorn1(0);
 		this.etape.setIndiceBorn2(1);

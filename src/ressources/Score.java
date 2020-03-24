@@ -38,10 +38,11 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 	public String getTempsMS () {
 		return Score.convertTempsMS(this.temps);
 	}
+	
 	public static String convertTempsMS (int tmp) {
 		int minutes = tmp/60;
 		int secondes = tmp%60;
-		return minutes+":"+secondes;
+		return String.format("%02d:%02d", minutes, secondes);
 	}
 
 	public int getTemps() {
@@ -86,16 +87,16 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 
 	@Override
 	public int compareTo(Score tmp) {
-		if (this.valeur < tmp.getValeur()) {
+		if (this.valeur > tmp.getValeur()) {
 			return 1;
 		} else {
-			if (this.valeur > tmp.getValeur()) {
+			if (this.valeur < tmp.getValeur()) {
 				return -1;
 			} else {
-				if (this.temps < tmp.getTemps()) {
+				if (this.temps > tmp.getTemps()) {
 					return 1;
 				} else {
-					if (this.temps > tmp.getTemps() ) {
+					if (this.temps < tmp.getTemps() ) {
 						return -1;
 					} else {
 						return this.pseudo.compareTo(tmp.getPseudo());

@@ -57,27 +57,60 @@ public class Etape {
 		return indice2;
 	}
 
-	public void setIndiceBorn1(int indice1) {
-		this.indice1 = indice1;
-	}
-
-	public void setIndiceBorn2(int indice2) {
-		this.indice2 = indice2;
-	}
-
-	public void setOperation(String operation) {
-		this.operation = operation;
+	public boolean setIndiceBorn1(int indice) {
+		boolean res;
+		if (indice1 >= this.plaques.length || indice < 0 || indice == this.indice2) {
+			res = false;
+		} else {
+			this.indice1 = indice;
+			res = true;
+		}
+		return res;
 	}
 	
-	public int getResultat() {
-		return resultat();
+	public void resetIndiceBorn1 () {
+		this.indice1 = -1;
+	}
+
+	public boolean setIndiceBorn2(int indice) {
+		boolean res;
+		if (indice >= this.plaques.length || indice < 0 || indice == this.indice1) {
+			res = false;
+		} else {
+			this.indice2 = indice;
+			res = true;
+		}
+		return res;
+	}
+	
+	public void resetIndiceBorn2 () {
+		this.indice2 = -1;
+	}
+
+	public boolean setOperation(String ope) {
+		boolean res = false;
+		if (ope.equals("X") || ope.equals("/") || ope.equals("+") || ope.equals("-")) {
+			this.operation = ope;
+			res = true;
+		}
+		return res;
+	}
+	
+	public void resetOperation () {
+		this.operation = null;
+	}
+	
+	public String getResultat() {
+		if (resultat()==-1)
+			return "?";
+		return String.valueOf(resultat());
 	}
 
 	/**
 	 * Calcul du resultat d une etape
 	 * @return en nombre entier (-1 si non conforme)
 	 */
-	private int resultat () {
+	public int resultat () {
 		int res;
 		switch(this.operation) {
 		case "X":
@@ -121,7 +154,7 @@ public class Etape {
 				if (this.indice2==-1) {
 					return this.plaques[indice1]+this.operation;
 				} else {
-					return this.plaques[indice1]+this.operation+this.plaques[indice2]+"="+this.resultat();
+					return this.plaques[indice1]+this.operation+this.plaques[indice2]+"="+this.getResultat();
 				}
 			}
 		}

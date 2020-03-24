@@ -1,11 +1,16 @@
 package application;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 import ressources.Score;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -35,18 +40,6 @@ public class Controller {
 	@FXML
 	private Button btnSupprimer;
 	@FXML
-	private Button plaque1;
-	@FXML
-	private Button plaque2;
-	@FXML
-	private Button plaque3;
-	@FXML
-	private Button plaque4;
-	@FXML
-	private Button plaque5;
-	@FXML
-	private Button plaque6;
-	@FXML
 	private TextField calcul;
 	@FXML
 	private TextField pseudo;
@@ -58,9 +51,16 @@ public class Controller {
 	private Label time;
 	@FXML
 	private Label realTime;
+	@FXML
+	private HBox plaques;
+	@FXML
+	private Label userMessage;
+	
+	private boolean chrono;
 	
 	public Controller () {
 		this.modele = new Modele ();
+		this.chrono = false;
 	}
 	
 	@FXML
@@ -69,14 +69,28 @@ public class Controller {
 		this.modele.setPseudo(null);
 		// initialise le modele
 		this.modele.initialiser();
+		this.etatBtnPlaques(false);
 		
-		this.realTime.setText(Modele.realTimeHMS());
+		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000), ae -> actionTimer()));
+		timer.setCycleCount(Animation.INDEFINITE);
+		timer.play();
+
 		this.time.setText(String.valueOf(Score.convertTempsMS(Modele.TIME_PLAY)));
 		
 		// met a jour l ecran en focntion du modele
 		this.majEcran();
 		// passe e l etat attendre
 		this.attendre();
+	}
+	
+	private void actionTimer () {
+		this.realTime.setText(Modele.realTimeHMS());
+		if (chrono) {
+			this.modele.decompter();
+		}
+		this.time.setText(String.valueOf(Score.convertTempsMS(this.modele.getTimeS())));
+		if (this.modele.getTimeS()==0)
+			this.actionProposer();
 	}
 	
 	private void attendre () {
@@ -90,6 +104,7 @@ public class Controller {
 		this.changeEtatBtn(false);
 		// activer la zone pseudo
 		this.pseudo.setEditable(true);
+		etatBtnPlaques(false);
 	}
 	
 	@FXML
@@ -108,10 +123,17 @@ public class Controller {
 		}
 	}
 	
+	private void lancerChrono () {
+		this.modele.initTime();
+		this.chrono=true;
+	}
+	
 	@FXML
 	private void actionPreparer(ActionEvent evt) {
 		if (this.btnJouer.getText().equals("Reset")) {
 			this.attendre();
+			this.modele.initTime();
+			this.chrono=false;
 		} else {
 			if (this.modele.getGameMode().equals("01") && this.modele.setPseudo(this.pseudo.getText())) {
 				this.modele.setGameMode("02");
@@ -119,7 +141,7 @@ public class Controller {
 				this.pseudo.setEditable(false);
 				this.modele.initialiser();
 				this.majEcran();
-				// lancer le chrono
+				this.lancerChrono();
 				this.btnJouer.setText("Reset");
 				this.btnValider.setDisable(true);
 				this.btnScores.setDisable(true);
@@ -132,25 +154,17 @@ public class Controller {
 	private void actionSelection (ActionEvent evt) {
 		this.modele.setGameMode("03");
 		Button btn = (Button) evt.getSource();
-		if (this.modele.etapeEnCours().getIndice1()==-1) {
-			try {
-				this.modele.etapeEnCours().setIndiceBorn1(this.modele.getIndexPlaquesEncours(Integer.valueOf(btn.getText())));
+		if (this.plaques.getChildren().contains(btn)) {
+			if (this.modele.setIndice1(this.plaques.getChildren().indexOf(btn))) {
 				btn.setDisable(true);
-			} catch (NumberFormatException e) {
-				System.out.println("Entrer incorrect.");
+			}
+			if (this.modele.setIndice2(this.plaques.getChildren().indexOf(btn))) {
+				etatBtnPlaques(false);
+				if (this.modele.estJouable() && this.modele.etapeEnCours().isValid())
+					this.btnValider.setDisable(false);
 			}
 		} else {
-			if (this.modele.etapeEnCours().getOperation()==null) {
-				this.modele.etapeEnCours().setOperation(btn.getText());
-				this.etatBtnOperations(false);
-			} else {
-				if (this.modele.etapeEnCours().getIndice2()==-1) {
-					this.modele.etapeEnCours().setIndiceBorn2(this.modele.getIndexPlaquesEncours(Integer.valueOf(btn.getText())));
-					etatBtnPlaques(false);
-					if (this.modele.etapeEnCours().isValid())
-						this.btnValider.setDisable(false);
-				}
-			}
+			this.modele.setOperation(btn.getText());
 		}
 		this.majEcran();
 	}
@@ -179,9 +193,10 @@ public class Controller {
 	@FXML
 	private void actionSupprimer () {
 		this.modele.setGameMode("03");
-		this.modele.supprimerLastEtape();
-		this.btnValider.setDisable(false);
-		majEcran();
+		if (this.modele.supprimerLastEtape()) {
+			this.modele.resetCalculEnCours();
+			majEcran();
+		}
 	}
 	
 	@FXML
@@ -193,56 +208,45 @@ public class Controller {
 	
 	private void actionScore () {
 		this.modele.setGameMode("04");
-		// stopper le chrono
-		this.modele.addResult();
-		this.attendre();
+		if (this.modele.addResult()) {
+			this.chrono = false;
+			this.userMessage.setText("Message : BRAVO! Votre score est de "+this.modele.getResultat()+".");
+			this.attendre();
+		} else {
+			if (this.modele.getTimeS()==0) {
+				this.chrono = false;
+				this.userMessage.setText("Message : PERDU!");
+				this.attendre();
+			} else { 
+				this.modele.setGameMode("03");
+			}
+		}
+	}
+	
+	private void afficherPlaques () {
+		this.plaques.getChildren().clear();
+		for (int e:this.modele.getPlaquesEnCours()) {
+			Button btn = new Button ();
+			btn.setText(e+"");
+			btn.setPrefSize(50, 27);
+			btn.setOnAction(event->{this.actionSelection(event);});
+			this.plaques.getChildren().add(btn);
+		}
 	}
 	
 	private void majEcran () {
-		switch(this.modele.etapeEnCours().getPlaques().length) {
-		case 6:
-			this.plaque1.setText(String.valueOf(this.modele.getPlaquesEnCours(0)));
-			this.plaque2.setText(String.valueOf(this.modele.getPlaquesEnCours(1)));
-			this.plaque3.setText(String.valueOf(this.modele.getPlaquesEnCours(2)));
-			this.plaque4.setText(String.valueOf(this.modele.getPlaquesEnCours(3)));
-			this.plaque5.setText(String.valueOf(this.modele.getPlaquesEnCours(4)));
-			this.plaque6.setText(String.valueOf(this.modele.getPlaquesEnCours(5)));
-		break;
-		case 5 :
-			this.plaque1.setText(String.valueOf(this.modele.getPlaquesEnCours(0)));
-			this.plaque2.setText(String.valueOf(this.modele.getPlaquesEnCours(1)));
-			this.plaque3.setText(String.valueOf(this.modele.getPlaquesEnCours(2)));
-			this.plaque4.setText(String.valueOf(this.modele.getPlaquesEnCours(3)));
-			this.plaque5.setText(String.valueOf(this.modele.getPlaquesEnCours(4)));
-		break;
-		case 4 :
-			this.plaque1.setText(String.valueOf(this.modele.getPlaquesEnCours(0)));
-			this.plaque2.setText(String.valueOf(this.modele.getPlaquesEnCours(1)));
-			this.plaque3.setText(String.valueOf(this.modele.getPlaquesEnCours(2)));
-			this.plaque4.setText(String.valueOf(this.modele.getPlaquesEnCours(3)));
-		break;
-		case 3:
-			this.plaque1.setText(String.valueOf(this.modele.getPlaquesEnCours(0)));
-			this.plaque2.setText(String.valueOf(this.modele.getPlaquesEnCours(1)));
-			this.plaque3.setText(String.valueOf(this.modele.getPlaquesEnCours(2)));
-		break;
-		default :
-			this.plaque1.setText(String.valueOf(this.modele.getPlaquesEnCours(0)));
-			this.plaque2.setText(String.valueOf(this.modele.getPlaquesEnCours(1)));
-		break;
-		}
+		this.afficherPlaques();
 		this.ligneCalculs.setText(this.modele.etapesToString());
 		this.nombre.setText(String.valueOf(this.modele.getDesiredNumber()));
 		this.calcul.setText(this.modele.etapeEnCours().getCalcul());
+		this.userMessage.setText("");
 	}
 	
 	private void etatBtnPlaques (boolean etat) {
-		this.plaque1.setDisable(!etat);
-		this.plaque2.setDisable(!etat);
-		this.plaque3.setDisable(!etat);
-		this.plaque4.setDisable(!etat);
-		this.plaque5.setDisable(!etat);
-		this.plaque6.setDisable(!etat);
+		for (int i=0; i < this.plaques.getChildren().size(); i++) {
+			Button b = (Button)(this.plaques.getChildren().get(i));
+			b.setDisable(!etat);
+		}
 	}
 	
 	private void etatBtnOperations (boolean etat) {
@@ -258,12 +262,6 @@ public class Controller {
 		this.btnValider.setDisable(!etat);
 		this.btnProposer.setDisable(!etat);
 		this.btnSupprimer.setDisable(!etat);
-		this.plaque1.setDisable(!etat);
-		this.plaque2.setDisable(!etat);
-		this.plaque3.setDisable(!etat);
-		this.plaque4.setDisable(!etat);
-		this.plaque5.setDisable(!etat);
-		this.plaque6.setDisable(!etat);
 	}
 	
 }

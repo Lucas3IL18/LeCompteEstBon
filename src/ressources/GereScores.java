@@ -24,11 +24,16 @@ public class GereScores {
 			enregistre();
 	}
 	
-	public void addScore (String pseudo, int valeur, int temps) {
-		this.list.add(new Score(pseudo, valeur, temps));
-		if (this.list.size()==10) { 
-			this.list.pollLast();
+	public boolean addScore (String pseudo, int valeur, int temps) {
+		boolean res = false;
+		if (valeur >= 0 && temps > 0) {
+			this.list.add(new Score(pseudo, valeur, temps));
+			if (this.list.size()==10) { 
+				this.list.pollLast();
+			}
+			res = true;
 		}
+		return res;
 	}
 	
 	private void addScore (Score s) {

@@ -1,9 +1,5 @@
 package application;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -65,9 +61,7 @@ public class Modele {
 	}
 	
 	public void resetCalculEnCours () {
-		this.etapeEnCours.resetIndiceBorn1();
-		this.etapeEnCours.resetIndiceBorn2();
-		this.etapeEnCours.resetOperation();
+		this.etapeEnCours.resetCalculEnCours();
 	}
 
 	public String getGameMode() {
@@ -92,7 +86,7 @@ public class Modele {
 	
 	public boolean addResult () {
 		boolean res = false;
-		res = this.gestion.addScore(this.pseudo, this.getResultat(), this.time);
+		res = this.gestion.addScore(this.pseudo, this.getResultat(), TIME_PLAY - this.time);
 		if (res) {
 			this.gestion.enregistre();
 			this.gestion.export();
@@ -100,40 +94,16 @@ public class Modele {
 		return res;
 	}
 	
-	private boolean isFirstIndice () {
-		return this.etapeEnCours().getOperation()==null && this.etapeEnCours().getIndice2()<0;
-	}
-	
-	private boolean isOperation () {
-		return this.etapeEnCours().getIndice1()>=0 && this.etapeEnCours().getIndice2()<0;
-	}
-	
-	private boolean isSecondIndice () {
-		return this.etapeEnCours().getIndice1()>=0 && this.etapeEnCours().getOperation()!=null;
-	}
-	
 	public boolean setIndice1 (int ind) {
-		boolean res = false;
-		if (this.isFirstIndice()) {
-			res = this.etapeEnCours().setIndiceBorn1(ind);
-		}	
-		return res;
+		return this.etapeEnCours().setIndice1(ind);
 	}
 	
 	public boolean setIndice2 (int ind) {
-		boolean res = false;
-		if (this.isSecondIndice()) {
-			res = this.etapeEnCours().setIndiceBorn2(ind);
-		}	
-		return res;
+		return this.etapeEnCours().setIndice2(ind);
 	}
 	
 	public boolean setOperation (String text) {
-		boolean res = false;
-		if (this.isOperation()) {
-			res = this.etapeEnCours().setOperation(text);
-		}	
-		return res;
+		return this.etapeEnCours().setOperation(text);
 	}
 	
 	public boolean validEtape () {
@@ -152,7 +122,7 @@ public class Modele {
 					newPlaques[i]=e;
 					i++;
 				}
-			newPlaques[newPlaques.length-1]=this.etapeEnCours.resultat();
+			newPlaques[newPlaques.length-1]=this.etapeEnCours.getResultat();
 			this.etapeEnCours=new Etape (newPlaques);
 		}
 		return res;
@@ -171,37 +141,19 @@ public class Modele {
 		return desiredNumber;
 	}
 	
-	public int getPlaquesEnCours (int index) {
-		return this.etapeEnCours.getPlaques()[index];
-	}
-	
 	public int[] getPlaquesEnCours () {
 		return this.etapeEnCours.getPlaques();
 	}
 	
 	public int getResultat () {
 		if (!this.listEtapes.isEmpty())
-			return Math.abs(this.listEtapes.getLast().resultat()-this.desiredNumber);
+			return Math.abs(this.listEtapes.getLast().getResultat()-this.desiredNumber);
 		else
 			return -1;
 	}
 	
-	public int getIndexPlaquesEncours(int value) {
-		int i = 0;
-		int[] tab = this.etapeEnCours.getPlaques();
-		while (i < tab.length && tab[i]!=value) {
-			i++;
-		}
-		return i;
-	}
-	
 	public String getScores () {
 		return this.gestion.toString();
-	}
-	
-	public static String realTimeHMS () {
-		LocalDateTime heure = LocalDateTime.now();
-		return heure.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	}
 	
 	public Etape etapeEnCours () {

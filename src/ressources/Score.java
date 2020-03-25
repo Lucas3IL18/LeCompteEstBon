@@ -36,13 +36,7 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 	 * @return temps en MM:SS
 	 */
 	public String getTempsMS () {
-		return Score.convertTempsMS(this.temps);
-	}
-	
-	public static String convertTempsMS (int tmp) {
-		int minutes = tmp/60;
-		int secondes = tmp%60;
-		return String.format("%02d:%02d", minutes, secondes);
+		return TimeTools.convertTempsMS(this.temps);
 	}
 
 	public int getTemps() {

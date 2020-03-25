@@ -25,48 +25,41 @@ public class TestEtape {
 
 	@Test
 	public void testNombreEntierNegatif() {
-		this.etape.setIndiceBorn1(0);
-		this.etape.setIndiceBorn2(1);
+		this.etape.setIndice1(0);
 		this.etape.setOperation("-");
+		this.etape.setIndice2(1);
 		assertFalse(this.etape.isValid());
 	}
 	
 	@Test
-	public void testSetOperationNull () {
-		this.etape.setOperation("+");
-		assertTrue(this.etape.setOperation(null));
-		
-	}
-	
-	@Test
 	public void testNombreEntierPositif() {
-		this.etape.setIndiceBorn1(0);
-		this.etape.setIndiceBorn2(1);
+		this.etape.setIndice1(0);
 		this.etape.setOperation("+");
+		this.etape.setIndice2(1);
 		assertTrue(this.etape.isValid());
 	}
 	
 	@Test
 	public void testNombreFlottant() {
-		this.etape.setIndiceBorn1(0);
-		this.etape.setIndiceBorn2(1);
+		this.etape.setIndice1(0);
 		this.etape.setOperation("/");
+		this.etape.setIndice2(1);
 		assertFalse(this.etape.isValid());
 	}
 	
 	@Test
 	public void testNombreFlottantResultEntier() {
-		this.etape.setIndiceBorn1(0);
-		this.etape.setIndiceBorn2(3);
+		this.etape.setIndice1(0);
 		this.etape.setOperation("/");
+		this.etape.setIndice2(3);
 		assertTrue(this.etape.isValid());
 	}
 	
 	@Test
 	public void testMultiplications() {
-		this.etape.setIndiceBorn1(0);
-		this.etape.setIndiceBorn2(1);
+		this.etape.setIndice1(0);
 		this.etape.setOperation("X");
+		this.etape.setIndice2(1);
 		assertTrue(this.etape.isValid());
 	}
 	

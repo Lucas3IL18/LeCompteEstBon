@@ -11,7 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
-import ressources.Score;
+import ressources.TimeTools;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -75,7 +75,7 @@ public class Controller {
 		timer.setCycleCount(Animation.INDEFINITE);
 		timer.play();
 
-		this.time.setText(String.valueOf(Score.convertTempsMS(Modele.TIME_PLAY)));
+		this.time.setText(String.valueOf(TimeTools.convertTempsMS(Modele.TIME_PLAY)));
 		
 		// met a jour l ecran en focntion du modele
 		this.majEcran();
@@ -84,11 +84,11 @@ public class Controller {
 	}
 	
 	private void actionTimer () {
-		this.realTime.setText(Modele.realTimeHMS());
+		this.realTime.setText(TimeTools.realTimeHMS());
 		if (chrono) {
 			this.modele.decompter();
 		}
-		this.time.setText(String.valueOf(Score.convertTempsMS(this.modele.getTimeS())));
+		this.time.setText(String.valueOf(TimeTools.convertTempsMS(this.modele.getTimeS())));
 		if (this.modele.getTimeS()==0)
 			this.actionProposer();
 	}

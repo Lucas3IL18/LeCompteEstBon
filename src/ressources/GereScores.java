@@ -14,16 +14,30 @@ import java.util.TreeSet;
 public class GereScores {
 	
 	private TreeSet<Score> list;
+	/** Chemin d accee au repertoire data */
 	private final String path = System.getProperty("user.dir")+"//data//";
+	/** Nom du fichier BIN */
 	private static final String SERIALNAME = "serial.bin"; 
+	/** Nom du fichier HTML */
 	private static final String HTMLNAME = "resultat.html";
 	
+	/** 
+	 * Constructeur de la classe GereScores 
+	 * Charge le dernier fichier utiliser sinon creer un nouveau
+	 */
 	public GereScores () {
 		this.list = new TreeSet<>();
 		if (!this.charge())
 			enregistre();
 	}
 	
+	/**
+	 * Ajoute un nouveau score
+	 * @param pseudo
+	 * @param valeur (valeur > 0)
+	 * @param temps (temps > 0)
+	 * @return true si le score a bien ete ajouter.
+	 */
 	public boolean addScore (String pseudo, int valeur, int temps) {
 		boolean res = false;
 		if (valeur >= 0 && temps > 0) {

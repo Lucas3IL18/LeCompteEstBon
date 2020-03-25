@@ -14,20 +14,23 @@ public class Etape {
 	private String operation;
 	private int indice1;
 	private int indice2;
+	private int resultat;
 	
+	/**
+	 * Constructeur pouvant servir a tester la classe par exemple
+	 * @param plaques
+	 */
 	public Etape (int[]plaques) {
 		if (plaques.length>BORN_SUP_PLAQUES || plaques==null || plaques.length<BORN_INF_PLAQUES) {
 			throw new IllegalArgumentException();
 		} 
 		this.plaques=plaques;
-		this.indice1=-1;
-		this.indice2=-1;
+		this.resetCalculEnCours();
 	}
 	
 	public Etape () {
 		this.plaques=generateTabInt();
-		this.indice1=-1;
-		this.indice2=-1;
+		this.resetCalculEnCours();
 	}
 	
 	private int[] generateTabInt () {
@@ -57,9 +60,9 @@ public class Etape {
 		return indice2;
 	}
 
-	public boolean setIndiceBorn1(int indice) {
+	public boolean setIndice1(int indice) {
 		boolean res;
-		if (indice1 >= this.plaques.length || indice < 0 || indice == this.indice2) {
+		if ((this.operation!=null || this.indice2>-1)||(indice1 >= this.plaques.length || indice < 0 || indice == this.indice2)) {
 			res = false;
 		} else {
 			this.indice1 = indice;
@@ -67,50 +70,50 @@ public class Etape {
 		}
 		return res;
 	}
-	
-	public void resetIndiceBorn1 () {
-		this.indice1 = -1;
-	}
 
-	public boolean setIndiceBorn2(int indice) {
+	public boolean setIndice2(int indice) {
 		boolean res;
-		if (indice >= this.plaques.length || indice < 0 || indice == this.indice1) {
+		if ((this.operation==null || this.indice1<0)||(indice >= this.plaques.length || indice < 0 || indice == this.indice1)) {
 			res = false;
 		} else {
 			this.indice2 = indice;
 			res = true;
+			this.resultat = this.resultat();
 		}
 		return res;
-	}
-	
-	public void resetIndiceBorn2 () {
-		this.indice2 = -1;
 	}
 
 	public boolean setOperation(String ope) {
 		boolean res = false;
-		if (ope.equals("X") || ope.equals("/") || ope.equals("+") || ope.equals("-")) {
+		if ((this.indice1>-1 && this.indice2<0)&&(ope.equals("X") || ope.equals("/") || ope.equals("+") || ope.equals("-"))) {
 			this.operation = ope;
 			res = true;
 		}
 		return res;
 	}
 	
-	public void resetOperation () {
+	public void resetCalculEnCours() {
 		this.operation = null;
+		this.indice1 = -1;
+		this.indice2 = -1;
+		this.resultat=-1;
 	}
 	
-	public String getResultat() {
-		if (resultat()==-1)
+	private String getResultatToString() {
+		if (this.resultat==-1)
 			return "?";
-		return String.valueOf(resultat());
+		return String.valueOf(this.resultat);
+	}
+	
+	public int getResultat () {
+		return this.resultat;
 	}
 
 	/**
 	 * Calcul du resultat d une etape
 	 * @return en nombre entier (-1 si non conforme)
 	 */
-	public int resultat () {
+	private int resultat () {
 		int res;
 		switch(this.operation) {
 		case "X":
@@ -138,7 +141,7 @@ public class Etape {
 	
 	public boolean isValid () {
 		boolean res = false;
-		if (this.indice1>-1 && this.indice2>-1 && this.operation!=null && this.resultat()>=0) {
+		if (this.indice1>-1 && this.indice2>-1 && this.operation!=null && this.resultat>=0) {
 			res = true;
 		}
 		return res;
@@ -154,7 +157,7 @@ public class Etape {
 				if (this.indice2==-1) {
 					return this.plaques[indice1]+this.operation;
 				} else {
-					return this.plaques[indice1]+this.operation+this.plaques[indice2]+"="+this.getResultat();
+					return this.plaques[indice1]+this.operation+this.plaques[indice2]+"="+this.getResultatToString();
 				}
 			}
 		}

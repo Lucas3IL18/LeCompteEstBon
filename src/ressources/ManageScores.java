@@ -34,8 +34,8 @@ public class ManageScores {
 	/**
 	 * Ajoute un nouveau score
 	 * @param pseudo
-	 * @param valeur (valeur > 0)
-	 * @param temps (temps > 0)
+	 * @param valeur : (valeur > 0)
+	 * @param temps : (temps > 0)
 	 * @return true si le score a bien ete ajouter.
 	 */
 	public boolean addScore (String pseudo, int valeur, int temps) {

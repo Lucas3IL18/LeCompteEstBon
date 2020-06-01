@@ -6,16 +6,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ressources.GereScores;
+import ressources.ManageScores;
 import ressources.Score;
 
 public class TestGereScore {
 	
-	private GereScores g;
+	private ManageScores g;
 
 	@Before
 	public void setUp() throws Exception {
-		g = new GereScores();
+		g = new ManageScores();
 	}
 
 	@After
@@ -40,10 +40,10 @@ public class TestGereScore {
 		g.addScore("MARCEL", 30, 67);
 		g.addScore("MARCEL", 20, 100);
 		
-		g.enregistre();
+		g.record();
 		
-		GereScores g2 = new GereScores();
-		g2.charge();
+		ManageScores g2 = new ManageScores();
+		g2.load();
 
 		assertTrue(g.toString().equals(g2.toString()));
 	}

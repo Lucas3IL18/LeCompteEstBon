@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Etape {
+public class Step {
 	
 	private static final int BORN_INF_PLAQUES = 1;
 	private static final int BORN_SUP_PLAQUES = 6;
@@ -20,17 +20,17 @@ public class Etape {
 	 * Constructeur pouvant servir a tester la classe par exemple
 	 * @param plaques
 	 */
-	public Etape (int[]plaques) {
+	public Step (int[]plaques) {
 		if (plaques.length>BORN_SUP_PLAQUES || plaques==null || plaques.length<BORN_INF_PLAQUES) {
 			throw new IllegalArgumentException();
 		} 
 		this.plaques=plaques;
-		this.resetCalculEnCours();
+		this.resetCalculationInProgress();
 	}
 	
-	public Etape () {
+	public Step () {
 		this.plaques=generateTabInt();
-		this.resetCalculEnCours();
+		this.resetCalculationInProgress();
 	}
 	
 	private int[] generateTabInt () {
@@ -78,7 +78,7 @@ public class Etape {
 		} else {
 			this.indice2 = indice;
 			res = true;
-			this.resultat = this.resultat();
+			this.resultat = this.result();
 		}
 		return res;
 	}
@@ -92,14 +92,14 @@ public class Etape {
 		return res;
 	}
 	
-	public void resetCalculEnCours() {
+	public void resetCalculationInProgress() {
 		this.operation = null;
 		this.indice1 = -1;
 		this.indice2 = -1;
 		this.resultat=-1;
 	}
 	
-	private String getResultatToString() {
+	private String getResultToString() {
 		if (this.resultat==-1)
 			return "?";
 		return String.valueOf(this.resultat);
@@ -113,7 +113,7 @@ public class Etape {
 	 * Calcul du resultat d une etape
 	 * @return en nombre entier (-1 si non conforme)
 	 */
-	private int resultat () {
+	private int result () {
 		int res;
 		switch(this.operation) {
 		case "X":
@@ -135,7 +135,7 @@ public class Etape {
 		return res;
 	}
 	
-	public int[] getPlaques () {
+	public int[] getPlates () {
 		return this.plaques;
 	}
 	
@@ -147,7 +147,7 @@ public class Etape {
 		return res;
 	}
 	
-	public String getCalcul () {
+	public String getCalculation () {
 		if (this.indice1==-1) {
 			return "";
 		} else {
@@ -157,7 +157,7 @@ public class Etape {
 				if (this.indice2==-1) {
 					return this.plaques[indice1]+this.operation;
 				} else {
-					return this.plaques[indice1]+this.operation+this.plaques[indice2]+"="+this.getResultatToString();
+					return this.plaques[indice1]+this.operation+this.plaques[indice2]+"="+this.getResultToString();
 				}
 			}
 		}

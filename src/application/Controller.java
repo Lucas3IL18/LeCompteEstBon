@@ -68,7 +68,7 @@ public class Controller {
 		this.modele.setGameMode("00");
 		this.modele.setPseudo(null);
 		// initialise le modele
-		this.modele.initialiser();
+		this.modele.initialize();
 		this.etatBtnPlaques(false);
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000), ae -> actionTimer()));
@@ -86,7 +86,7 @@ public class Controller {
 	private void actionTimer () {
 		this.realTime.setText(TimeTools.realTimeHMS());
 		if (chrono) {
-			this.modele.decompter();
+			this.modele.countDown();
 		}
 		this.time.setText(String.valueOf(TimeTools.convertTempsMS(this.modele.getTimeS())));
 		if (this.modele.getTimeS()==0)
@@ -109,7 +109,7 @@ public class Controller {
 	
 	@FXML
 	private void actionAfficherScores (ActionEvent evt) {
-		if (this.modele.chargeScores()) {
+		if (this.modele.loadScores()) {
 			Alert bteDialog = new Alert(AlertType.INFORMATION);
 			bteDialog.setTitle("SCORES");
 			bteDialog.setHeaderText("Voici les meilleures scores :");
@@ -139,7 +139,7 @@ public class Controller {
 				this.modele.setGameMode("02");
 				this.changeEtatBtn(true);
 				this.pseudo.setEditable(false);
-				this.modele.initialiser();
+				this.modele.initialize();
 				this.majEcran();
 				this.lancerChrono();
 				this.btnJouer.setText("Reset");
@@ -160,7 +160,7 @@ public class Controller {
 			}
 			if (this.modele.setIndice2(this.plaques.getChildren().indexOf(btn))) {
 				etatBtnPlaques(false);
-				if (this.modele.estJouable() && this.modele.etapeEnCours().isValid())
+				if (this.modele.isPlayable() && this.modele.stepInProgress().isValid())
 					this.btnValider.setDisable(false);
 			}
 		} else {
@@ -172,7 +172,7 @@ public class Controller {
 	@FXML
 	private void actionAnnuler () {
 		this.modele.setGameMode("03");
-		this.modele.resetCalculEnCours();
+		this.modele.resetCalculationInProgress();
 		etatBtnPlaques(true);
 		etatBtnOperations(true);
 		this.btnValider.setDisable(true);
@@ -182,7 +182,7 @@ public class Controller {
 	@FXML
 	private void actionValider() {
 		this.modele.setGameMode("03");
-		if(this.modele.validEtape()) {
+		if(this.modele.validStep()) {
 			etatBtnPlaques(true);
 			etatBtnOperations(true);
 			this.btnValider.setDisable(true);
@@ -193,8 +193,8 @@ public class Controller {
 	@FXML
 	private void actionSupprimer () {
 		this.modele.setGameMode("03");
-		if (this.modele.supprimerLastEtape()) {
-			this.modele.resetCalculEnCours();
+		if (this.modele.deleteLastStep()) {
+			this.modele.resetCalculationInProgress();
 			majEcran();
 		}
 	}
@@ -225,7 +225,7 @@ public class Controller {
 	
 	private void afficherPlaques () {
 		this.plaques.getChildren().clear();
-		for (int e:this.modele.getPlaquesEnCours()) {
+		for (int e:this.modele.getPlatesInProgress()) {
 			Button btn = new Button ();
 			btn.setText(e+"");
 			btn.setPrefSize(50, 27);
@@ -236,9 +236,9 @@ public class Controller {
 	
 	private void majEcran () {
 		this.afficherPlaques();
-		this.ligneCalculs.setText(this.modele.etapesToString());
+		this.ligneCalculs.setText(this.modele.stepsToString());
 		this.nombre.setText(String.valueOf(this.modele.getDesiredNumber()));
-		this.calcul.setText(this.modele.etapeEnCours().getCalcul());
+		this.calcul.setText(this.modele.stepInProgress().getCalculation());
 		this.userMessage.setText("");
 	}
 	

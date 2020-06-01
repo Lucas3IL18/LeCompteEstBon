@@ -11,7 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.TreeSet;
 
-public class GereScores {
+public class ManageScores {
 	
 	private TreeSet<Score> list;
 	/** Chemin d accee au repertoire data */
@@ -25,10 +25,10 @@ public class GereScores {
 	 * Constructeur de la classe GereScores 
 	 * Charge le dernier fichier utiliser sinon creer un nouveau
 	 */
-	public GereScores () {
+	public ManageScores () {
 		this.list = new TreeSet<>();
-		if (!this.charge())
-			enregistre();
+		if (!this.load())
+			record();
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class GereScores {
 		}
 	}
 	
-	public void affiche () {
+	public void display () {
 		for (Score e : this.list) {
 			System.out.println(e);
 		}
@@ -74,7 +74,7 @@ public class GereScores {
 	/**
 	 * Sauvegarde du tableau des scores dans un fichier .bin
 	 */
-	public void enregistre () {
+	public void record () {
 		File file = new File (path+SERIALNAME);
 	    ObjectOutputStream oos = null;
 	    try (final FileOutputStream fichier = new FileOutputStream(file)) {
@@ -100,13 +100,13 @@ public class GereScores {
 	/**
 	 * Extraction du tableau des scores depuis un fichier .bin
 	 */
-	public boolean charge () {
+	public boolean load () {
 		ObjectInputStream ois = null;
 		File file = new File (path+SERIALNAME);
 		if (file.exists()) {
 			try (final FileInputStream fichier = new FileInputStream(file)) {
 			      ois = new ObjectInputStream(fichier);
-			      majSerialScores(ois);
+			      updateSerialScore(ois);
 			} catch (java.io.IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			} finally {
@@ -130,7 +130,7 @@ public class GereScores {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	private void majSerialScores (ObjectInputStream oi) throws ClassNotFoundException, IOException {
+	private void updateSerialScore (ObjectInputStream oi) throws ClassNotFoundException, IOException {
 		boolean end = false;
 	      while (!end) {
 	    	  try {

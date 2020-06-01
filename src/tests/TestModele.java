@@ -15,7 +15,7 @@ public class TestModele {
 	@Before
 	public void setUp() throws Exception {
 		this.m = new Modele ();
-		this.m.initialiser();
+		this.m.initialize();
 	}
 
 	@After
@@ -26,7 +26,7 @@ public class TestModele {
 	@Test
 	public void testCountDown() {
 		int test = this.m.getTimeS();
-		this.m.decompter();
+		this.m.countDown();
 		assertEquals(test-1, this.m.getTimeS());
 	}
 	
@@ -40,7 +40,7 @@ public class TestModele {
 	public void testDesiredNumber () {
 		boolean res = true;
 		for (int i = 100; i < 999; i++) {
-			this.m.initialiser();
+			this.m.initialize();
 			if (this.m.getDesiredNumber() < 100 || this.m.getDesiredNumber() > 999)
 				res = false;
 		}
@@ -49,7 +49,7 @@ public class TestModele {
 	
 	@Test
 	public void testDeleteLastStepEmpty () {
-		assertFalse(this.m.supprimerLastEtape());
+		assertFalse(this.m.deleteLastStep());
 	}
 	
 	@Test
@@ -57,7 +57,7 @@ public class TestModele {
 		this.m.setIndice1(0);
 		this.m.setOperation("+");
 		this.m.setIndice2(1);
-		assertTrue(this.m.validEtape());
+		assertTrue(this.m.validStep());
 	}
 	
 	@Test
@@ -65,7 +65,7 @@ public class TestModele {
 		this.m.setIndice1(0);
 		this.m.setOperation("+");
 		this.m.setIndice2(0);
-		assertFalse(this.m.validEtape());
+		assertFalse(this.m.validStep());
 	}
 	
 	@Test
@@ -74,8 +74,8 @@ public class TestModele {
 		this.m.setIndice1(0);
 		this.m.setOperation("+");
 		this.m.setIndice2(1);
-		this.m.validEtape();
-		this.m.decompter();
+		this.m.validStep();
+		this.m.countDown();
 		assertTrue(this.m.addResult());
 	}
 	

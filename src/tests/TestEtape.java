@@ -8,16 +8,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ressources.Etape;
+import ressources.Step;
 
 public class TestEtape {
 	
-	private Etape etape;
+	private Step etape;
 
 	@Before
 	public void setUp() {
 		int[] plaques = {2,6,8,1,9,7};
-		this.etape = new Etape (plaques);
+		this.etape = new Step (plaques);
 	}
 
 	@After
@@ -28,7 +28,7 @@ public class TestEtape {
 	@Test
 	public void testConstructor () {
 		int[] plaques = {2,6,8,1,9,7};
-		assertTrue(Arrays.equals(plaques, this.etape.getPlaques()));
+		assertTrue(Arrays.equals(plaques, this.etape.getPlates()));
 	}
 	
 	@Test
@@ -53,13 +53,13 @@ public class TestEtape {
 	
 	@Test
 	public void testGetCalcul () {
-		assertEquals("" ,this.etape.getCalcul());
+		assertEquals("" ,this.etape.getCalculation());
 		this.etape.setIndice1(0);
-		assertEquals("2" ,this.etape.getCalcul());
+		assertEquals("2" ,this.etape.getCalculation());
 		this.etape.setOperation("X");
-		assertEquals("2X" ,this.etape.getCalcul());
+		assertEquals("2X" ,this.etape.getCalculation());
 		this.etape.setIndice2(1);
-		assertEquals("2X6=12" ,this.etape.getCalcul());
+		assertEquals("2X6=12" ,this.etape.getCalculation());
 	}
 	
 	@Test
@@ -112,19 +112,19 @@ public class TestEtape {
 	
 	@Test
 	public void testConstructor2 () {
-		Etape e = new Etape ();
-		assertEquals(6, e.getPlaques().length);
+		Step e = new Step ();
+		assertEquals(6, e.getPlates().length);
 	}
 	
 	 @Test(expected=NullPointerException.class)
 	 public void testExceptionNullConstructeur() {
-		 this.etape = new Etape(null);
+		 this.etape = new Step(null);
 	 }
 	 
 	 @Test(expected=IllegalArgumentException.class)
 	 public void testExceptionIllegalArgumentConstructeur() {
 		 int[] plaques = {2,6,8,1,9,7,8};
-		 this.etape = new Etape(plaques);
+		 this.etape = new Step(plaques);
 	 }
 
 }

@@ -1,4 +1,4 @@
-package testressources;
+package tests;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ressources.GereScores;
+import ressources.Score;
 
 public class TestGereScore {
 	
@@ -45,6 +46,11 @@ public class TestGereScore {
 		g2.charge();
 
 		assertTrue(g.toString().equals(g2.toString()));
+	}
+	
+	@Test
+	public void testExport () {
+		assertTrue(this.g.export());
 	}
 
 }

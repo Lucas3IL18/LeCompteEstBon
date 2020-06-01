@@ -1,11 +1,11 @@
-package testressources;
+package tests;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TestEtape.class, TestGereScore.class })
+@SuiteClasses({ TestEtape.class, TestGereScore.class, TestScore.class, TestModele.class })
 public class AllTests {
 
 }

@@ -16,7 +16,7 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 		this.pseudo = pseudo;
 		this.valeur = valeur;
 		this.temps = temps;
-		this.date = today(); 
+		this.date = today();
 	}
 	
 	public int getValeur () {
@@ -45,6 +45,11 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 
 	public void setTemps(int temps) {
 		this.temps = temps;
+	}
+	
+	@Deprecated
+	public void setDate (String date) {
+		this.date = date;
 	}
 
 	public String getDate() {

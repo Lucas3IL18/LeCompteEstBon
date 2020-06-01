@@ -146,7 +146,8 @@ public class GereScores {
 	/**
 	 * Exporte le tableau des scores dans un fichier html
 	 */
-	public void export () {
+	public boolean export () {
+		boolean res = false;
 		try {
 			File htmlFile= new File(path+HTMLNAME);
 			BufferedWriter fichier = new BufferedWriter(new FileWriter(htmlFile));
@@ -169,8 +170,10 @@ public class GereScores {
 					"</HTML>");
 
 			fichier.close();
+			res = true;
 		}catch (Exception e) {
 			System.err.println(e);
 		}
+		return res;
 	}
 }
